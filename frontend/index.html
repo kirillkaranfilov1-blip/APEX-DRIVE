@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#090d12" />
+    <meta name="description" content="APEX DRIVE — аркадные гонки нового поколения." />
+    <title>APEX DRIVE — Аркадные гонки</title>
+  </head>
+  <body>
+    <main id="game-shell">
+      <canvas id="game-canvas" aria-label="3D трасса APEX DRIVE"></canvas>
+      <header class="topbar">
+        <a class="wordmark" href="#" aria-label="APEX DRIVE">APEX<span>DRIVE</span></a>
+        <div class="session-tag"><i></i> ЗАКРЫТЫЙ ЗАЕЗД <b>01</b></div>
+        <div class="topbar-actions">
+          <button class="topbar-catalog-btn" id="open-catalog-btn" title="Каталог машин и трасс (C)">КАТАЛОГ <b>C</b></button>
+          <button class="icon-button" id="sound-toggle" aria-label="Звук" title="Звук">♫</button>
+        </div>
+      </header>
+
+      <section class="intro-panel" id="intro-panel">
+        <div class="eyebrow"><span id="intro-season">СЕЗОН 01</span><span class="eyebrow-line"></span><span id="intro-track-title">ТРЕНИРОВОЧНЫЙ ОВАЛ</span></div>
+        <h1>НАЙДИ<br /><em>СВОЮ</em> ТРАЕКТОРИЮ</h1>
+        <p class="intro-copy" id="intro-copy">Выбери автомобиль и трассу в каталоге,<br />прогрей резину и покажи идеальное время круга.</p>
+        <div class="intro-buttons">
+          <button class="start-button" id="start-race"><span>ВЫЕХАТЬ НА ТРАССУ</span><b>↗</b></button>
+          <button class="secondary-button" id="intro-catalog-btn"><span>КАТАЛОГ & ГАРАЖ</span><b>⚙</b></button>
+        </div>
+        <div class="control-hint"><span>W A S D</span> УПРАВЛЕНИЕ <i>·</i> <span>SPACE</span> РУЧНИК <i>·</i> <span>C</span> КАТАЛОГ</div>
+      </section>
+
+      <section class="hud hidden" id="race-hud" aria-live="polite">
+        <div class="race-meta"><span id="hud-track-meta">ОВАЛ / КРУГ 01</span><b id="race-time">00:00.00</b></div>
+        <div class="lap-badge"><small>КРУГ</small><strong><span id="lap-current">1</span><i>/</i><span id="lap-total">2</span></strong></div>
+        <div class="position-badge hidden" id="position-badge"><small>МЕСТО</small><strong><b id="player-position">1</b><i>/</i><span id="total-racers">5</span></strong></div>
+        <div class="speed-block"><div class="speed-read"><strong id="speed-value">000</strong><span>КМ/Ч</span></div><div class="speed-track"><i id="speed-fill"></i></div><div class="gear-read">ПЕРЕДАЧА <b id="gear-value">1</b></div></div>
+        <div class="checkpoint-toast hidden" id="checkpoint-toast">КОНТРОЛЬНАЯ ТОЧКА <b>✓</b></div>
+      </section>
+
+      <div class="countdown hidden" id="countdown">3</div>
+      <pre class="debug-panel hidden" id="debug-panel" aria-live="polite"></pre>
+      <div class="toast hidden" id="toast"></div>
+
+      <!-- Модальный экран каталога (Машины и Трассы) -->
+      <section class="catalog-overlay hidden" id="catalog-overlay" aria-modal="true" role="dialog">
+        <div class="catalog-window">
+          <header class="catalog-header">
+            <div class="catalog-brand">
+              <span class="eyebrow-mini">APEX MOTORSPORT</span>
+              <h2>КАТАЛОГ</h2>
+            </div>
+            <div class="catalog-tabs">
+              <button class="catalog-tab active" data-tab="vehicles" id="tab-btn-vehicles">
+                <span class="tab-badge">9</span> АВТОМОБИЛИ
+              </button>
+              <button class="catalog-tab" data-tab="tracks" id="tab-btn-tracks">
+                <span class="tab-badge">4</span> ТРАССЫ
+              </button>
+              <button class="catalog-tab" data-tab="competitive" id="tab-btn-competitive">
+                <span class="tab-badge">🏆</span> СОРЕВНОВАНИЕ
+              </button>
+            </div>
+            <button class="icon-button close-catalog-btn" id="close-catalog-btn" aria-label="Закрыть каталог" title="Закрыть (Esc / C)">✕</button>
+          </header>
+
+          <div class="catalog-body">
+            <!-- Вкладка Автомобилей -->
+            <div class="catalog-panel" id="catalog-panel-vehicles">
+              <div class="catalog-intro-bar">
+                <span>ВЫБЕРИТЕ АВТОМОБИЛЬ ДЛЯ ТЕКУЩЕГО ЗАЕЗДА. ПАРАМЕТРЫ ФИЗИКИ ПРИМЕНЯЮТСЯ МГНОВЕННО.</span>
+              </div>
+              <div class="catalog-grid" id="vehicles-grid">
+                <!-- Карточки генерируются динамически -->
+              </div>
+            </div>
+
+            <!-- Вкладка Трасс -->
+            <div class="catalog-panel hidden" id="catalog-panel-tracks">
+              <div class="catalog-intro-bar">
+                <span>ВЫБЕРИТЕ ГОНОЧНЫЙ ТРЕК. ЛОКАЦИЯ, КОНФИГУРАЦИЯ И СТАРТОВАЯ ПОЗИЦИЯ БУДУТ ПЕРЕСТРОЕНЫ.</span>
+              </div>
+              <div class="catalog-grid" id="tracks-grid">
+                <!-- Карточки генерируются динамически -->
+              </div>
+            </div>
+
+            <!-- Вкладка Соревнования -->
+            <div class="catalog-panel hidden" id="catalog-panel-competitive">
+              <div class="catalog-intro-bar">
+                <span>ГРАН-ПРИ АРЕНА — ТРАССА 4.8 КМ. СРАЗИСЬ ПРОТИВ 4 ОПЫТНЫХ СОПЕРНИКОВ ЗА 1 МЕСТО НА ПОДИУМЕ.</span>
+              </div>
+              <div class="competitive-layout">
+                <div class="gp-hero">
+                  <div class="gp-hero-eyebrow">APEX MOTORSPORT — ГРАН-ПРИ</div>
+                  <h3 class="gp-hero-title">ГРАН-ПРИ АПЕКС</h3>
+                  <p class="gp-hero-sub">Международный автодром · 4.8 км · 2 круга · 5 участников</p>
+                  <div class="gp-meta-row">
+                    <span class="gp-pill">ШИРИНА ТРАССЫ <b>15.5 М</b></span>
+                    <span class="gp-pill">СКОРОСТЬ <b>ДО 290 КМ/Ч</b></span>
+                    <span class="gp-pill">КЛАСС <b>ВСЕ КЛАССЫ</b></span>
+                  </div>
+                  <button class="start-button gp-start-btn" id="competitive-start-btn">
+                    <span>СТАРТ СОРЕВНОВАНИЯ</span><b>↗</b>
+                  </button>
+                </div>
+                <div class="opponents-list">
+                  <div class="opponents-header">СТАРТОВАЯ РЕШЁТКА — СОПЕРНИКИ</div>
+                  <div class="opponent-item" id="opp-ai-marcus">
+                    <span class="opp-pos">P1</span>
+                    <span class="opp-color" style="background:#1f5fbf"></span>
+                    <div class="opp-info">
+                      <b>Маркус Вэнс</b>
+                      <small>Bavaria M4 Clubsport · Club Sport</small>
+                      <p>Лидер квалификации. Агрессивно защищает траекторию на апексах.</p>
+                    </div>
+                    <span class="opp-speed">242 км/ч</span>
+                  </div>
+                  <div class="opponent-item" id="opp-ai-elena">
+                    <span class="opp-pos">P2</span>
+                    <span class="opp-color" style="background:#e5a912"></span>
+                    <div class="opp-info">
+                      <b>Елена Ростова</b>
+                      <small>Stuttgart GT Coupe · Sports Car</small>
+                      <p>Мастер скоростных прямиков. Держит стабильный гоночный темп.</p>
+                    </div>
+                    <span class="opp-speed">246 км/ч</span>
+                  </div>
+                  <div class="opponent-item" id="opp-ai-hiroshi">
+                    <span class="opp-pos">P3</span>
+                    <span class="opp-color" style="background:#f0f3f6"></span>
+                    <div class="opp-info">
+                      <b>Хироши Танака</b>
+                      <small>Yokohama GT-Spec · Sports Car</small>
+                      <p>Специалист по шпилькам и позднему торможению на грани сцепления.</p>
+                    </div>
+                    <span class="opp-speed">238 км/ч</span>
+                  </div>
+                  <div class="opponent-item" id="opp-ai-jake">
+                    <span class="opp-pos">P4</span>
+                    <span class="opp-color" style="background:#dd4b1a"></span>
+                    <div class="opp-info">
+                      <b>Джейк Миллер</b>
+                      <small>Detroit Muscle V8 · Muscle Car</small>
+                      <p>Невероятная мощь V8 на выходе из поворотов. Опасен при обгонах.</p>
+                    </div>
+                    <span class="opp-speed">248 км/ч</span>
+                  </div>
+                  <div class="opponent-item opp-player">
+                    <span class="opp-pos">P5</span>
+                    <span class="opp-color" style="background:#d7f36a"></span>
+                    <div class="opp-info">
+                      <b id="competitive-player-car">ВАША МАШИНА</b>
+                      <small id="competitive-player-label">Выбранный автомобиль</small>
+                      <p>Это вы. Докажите, кто здесь лучший!</p>
+                    </div>
+                    <span class="opp-speed" style="color:#d7f36a">ВЫ</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="pause-overlay hidden" id="pause-overlay">
+        <div class="pause-card">
+          <div class="eyebrow">ЗАЕЗД ПРИОСТАНОВЛЕН</div>
+          <h2>ПЕРЕДЫШКА</h2>
+          <button class="start-button" id="resume-race"><span>ПРОДОЛЖИТЬ</span><b>↗</b></button>
+          <button class="secondary-button w-full" id="pause-catalog-btn"><span>КАТАЛОГ МАШИН И ТРАСС</span><b>⚙</b></button>
+          <button class="text-button" id="reset-race">НАЧАТЬ ЗАНОВО <span>R</span></button>
+          <p>ESC — ПРОДОЛЖИТЬ &nbsp; · &nbsp; C — КАТАЛОГ &nbsp; · &nbsp; R — ПЕРЕЗАПУСК</p>
+        </div>
+      </section>
+
+      <section class="finish-overlay hidden" id="finish-overlay">
+        <div class="finish-card">
+          <div class="eyebrow">ФИНИШНАЯ ЧЕРТА</div>
+          <h2 id="finish-title">ХОРОШИЙ ЗАЕЗД</h2>
+          <p>Время <strong id="finish-time">00:00.00</strong></p>
+          <button class="start-button" id="again-race"><span>ЕЩЁ ОДИН ЗАЕЗД</span><b>↗</b></button>
+          <button class="secondary-button w-full" id="finish-catalog-btn"><span>КАТАЛОГ & СМЕНА ТРАССЫ</span><b>⚙</b></button>
+          <button class="text-button" id="return-menu">В МЕНЮ <span>ESC</span></button>
+        </div>
+      </section>
+
+      <footer class="bottom-bar">
+        <span>ПРОТОТИП / ВЕРТИКАЛЬНЫЙ СРЕЗ</span>
+        <span id="vehicle-label">NIGHTRUN / CLUB SPORT</span>
+        <span>КАТАЛОГ <b>C</b> <i>·</i> ПОМОЩЬ <b>H</b> <i>·</i> СБРОС <b>R</b> <i>·</i> ПАУЗА <b>ESC</b></span>
+      </footer>
+      <div class="loading-screen" id="loading-screen">
+        <div class="loading-mark">APEX<span>DRIVE</span></div>
+        <div class="loading-track"><i></i></div>
+        <div class="loading-caption">ЗАПУСК СИЛОВОЙ УСТАНОВКИ</div>
+        <div class="loading-detail" id="loading-detail"></div>
+      </div>
+    </main>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

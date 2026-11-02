@@ -1,0 +1,25 @@
+{
+  "name": "apex-drive",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "start": "vite --host 127.0.0.1 --open",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "node scripts/run-vitest.mjs",
+    "test:backend": "python -m pytest",
+    "test:watch": "vitest",
+    "api": "python -m backend.app"
+  },
+  "dependencies": {
+    "@dimforge/rapier3d-compat": "0.19.3",
+    "gsap": "3.15.0",
+    "three": "0.187.0"
+  },
+  "devDependencies": {
+    "vite": "8.3.5",
+    "vitest": "4.1.3"
+  }
+}

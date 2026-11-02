@@ -1,0 +1,72 @@
+[
+  {
+    "id": "starter-oval",
+    "name": "Тренировочный овал (Простой круг)",
+    "theme": "Гоночный полигон",
+    "location": "Тестовый полигон Apex",
+    "description": "Идеально ровное широкое кольцо без перепада высот. Лучшая трасса для новичков, чтобы освоить управление, почувствовать торможение и выжать максимальную скорость.",
+    "previewImage": null,
+    "difficulty": "Новичок",
+    "lengthKm": 1.2,
+    "laps": 2,
+    "recommendedClass": "Любой класс",
+    "unlock": { "reputation": 0 },
+    "availableEventTypes": ["Тренировка", "Круговая гонка", "Заезд на время"]
+  },
+  {
+    "id": "apex-grand-prix",
+    "name": "Гран-При Апекс (Соревновательный трек)",
+    "theme": "Международный автодром",
+    "location": "Apex Grand Prix Arena",
+    "description": "Большой скоростной кольцевой автодром с широким полотном 15 метров, длинной финишной прямой и техничной шпилькой. Создан специально для соревнований с 4 соперниками за 1 место!",
+    "previewImage": null,
+    "difficulty": "Соревнование",
+    "lengthKm": 4.8,
+    "laps": 2,
+    "recommendedClass": "Все классы",
+    "unlock": { "reputation": 0 },
+    "availableEventTypes": ["Гран-при", "Битва соперников"]
+  },
+  {
+    "id": "northwind-valley",
+    "name": "Долина северных ветров",
+    "theme": "Горный серпантин",
+    "location": "Северный хребет",
+    "description": "Живописная извилистая дорога среди хвойных лесов и скал с ритмичными связками поворотов.",
+    "previewImage": null,
+    "difficulty": "Любитель",
+    "lengthKm": 2.4,
+    "laps": 2,
+    "recommendedClass": "Club Sport",
+    "unlock": { "reputation": 0 },
+    "availableEventTypes": ["Спринт", "Круговая гонка"]
+  },
+  {
+    "id": "coastal-speedway",
+    "name": "Береговая линия",
+    "theme": "Прибрежное шоссе",
+    "location": "Западное побережье",
+    "description": "Скоростной маршрут с затяжными скоростными дугами и длинными прямиками для максимальной скорости.",
+    "previewImage": null,
+    "difficulty": "Средняя",
+    "lengthKm": 3.6,
+    "laps": 2,
+    "recommendedClass": "Sports Car",
+    "unlock": { "reputation": 0 },
+    "availableEventTypes": ["Спринт", "Заезд на время"]
+  },
+  {
+    "id": "ember-works",
+    "name": "Эмбер-воркс",
+    "theme": "Индустриальная зона",
+    "location": "Старая промзона",
+    "description": "Техническая трасса между старыми ангарами и грузовыми путями с резкими поворотами 90° и шиканами.",
+    "previewImage": null,
+    "difficulty": "Профессионал",
+    "lengthKm": 3.1,
+    "laps": 3,
+    "recommendedClass": "Sports Car",
+    "unlock": { "reputation": 0 },
+    "availableEventTypes": ["Круговая гонка", "Дрифт-вызов"]
+  }
+]
